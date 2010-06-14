@@ -28,14 +28,53 @@ get(
 );
 
 get(
+	'/track',
+	function () {
+		self.contentType( 'json' )
+		self.respond( 200, JSON.encode( {} ) )
+	}
+)
+
+get(
 	'/',
 	function () {
+		if( this.session.logged_in == true ) {
+			this.render(
+				'dashboard.html.haml',
+				{
+					locals:
+					{
+						title: 'NodeRegator Dashboard',
+						flashes: this.flash( 'info' )
+					}
+				}
+			)
+		}
+		else {
+			this.render(
+				'index.html.haml',
+				{
+					locals:
+					{
+						title: 'Welcome To NodeRegator',
+						flashes: this.flash( 'info' )
+					}
+				}
+			)
+		}
+	}
+)
+
+get(
+	'/login',
+	function () {
+		if( this.session.logged_in == true ) { this.redirect( '/' ); }
 		this.render(
-			'index.html.haml',
+			'login.html.haml',
 			{
 				locals:
 				{
-					title: 'Welcome To NodeRegator',
+					title: 'Log In To NodeRegator',
 					flashes: this.flash( 'info' )
 				}
 			}
@@ -43,11 +82,31 @@ get(
 	}
 )
 
-get(
-	'/track',
+
+post(
+	'/login',
 	function () {
-		this.contentType( 'javascript' );
-		return '{}';
+		if( this.session.logged_in == true ) { this.redirect( '/' ); }
+		if( this.param( 'username' ) == 'jmhobbs' && this.param( 'password' ) == 'password' ) {
+			this.session.logged_in = true;
+			this.flash( 'info', 'Logged You In' );
+			this.redirect( '/' );
+		}
+		else {
+			this.flash( 'info', 'Invalid Credentials' );
+			this.redirect( '/login' );
+		}
+	}
+)
+
+get(
+	'/logout',
+	function () {
+		if( this.session.logged_in == true ) {
+			this.session.logged_in = false;
+			this.flash( 'info', 'Logged you out.' );
+			this.redirect( '/login' );
+		}
 	}
 )
 
