@@ -1,3 +1,6 @@
+require.paths.unshift('lib')
+var bcrypt = require('bcrypt_node');
+
 require.paths.unshift('../lib')
 require('express')
 require('express/plugins')
@@ -60,7 +63,7 @@ get(
 				{
 					locals:
 					{
-						title: 'Welcome To NodeRegator',
+						title: 'Welcome To NodeRegator - ' + hash,
 						flashes: this.flash( 'info' )
 					}
 				}
@@ -103,8 +106,8 @@ post(
 						function( error, result ) {
 							if( error ) { request.flash( 'info', 'Database Error, Sorry!' ); request.redirect( '/login' ); }
 							else {
-								require('sys').puts( JSON.encode( result ) );
-								if( "undefined" != typeof( result ) && request.param( 'password' ) == result.password ) {
+								var bc = new bcrypt.BCrypt();
+								if( "undefined" != typeof( result ) && bc.compare( request.param( 'password' ), result.password ) ) {
 									request.session.logged_in = true;
 									request.flash( 'info', 'Logged You In' );
 									request.redirect( '/' );
@@ -132,5 +135,43 @@ get(
 		}
 	}
 )
+
+get(
+	'/signup',
+	function () {
+		if( this.session.logged_in == true ) { this.redirect( '/' ); }
+		this.render(
+			'signup.html.haml',
+			{
+				locals:
+				{
+					title: 'Sign Up For NodeRegator',
+					flashes: this.flash( 'info' )
+				}
+			}
+		)
+	}
+)
+
+post(
+	'/signup',
+	function () {
+		if( this.session.logged_in == true ) { this.redirect( '/' ); }
+		// TODO
+		this.flash( 'info', 'Signed You Up' );
+		this.redirect( '/login' );
+	}
+)
+
+// Development Only!
+// get(
+// 	'/genpass',
+// 	function () {
+// 		var bc = new bcrypt.BCrypt();
+// 		var salt = bc.gen_salt(20);
+// 		var hash = bc.hashpw( this.param( 'password' ), salt );
+// 		return hash;
+// 	}
+// )
 
 run()

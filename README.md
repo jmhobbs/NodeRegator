@@ -8,4 +8,7 @@ I have a bunch of sites spread across multiple GA accounts, and I want to compar
 
 # Requirements
 
-NodeRegator uses [node.js](http://nodejs.org/), [Express](http://github.com/visionmedia/express) and [MongoDB](http://www.mongodb.org).
+* [node.js](http://nodejs.org/)
+* [bcrypt-node](http://github.com/ncb000gt/node.bcrypt.js)
+* [Express](http://github.com/visionmedia/express)
+* [MongoDB](http://www.mongodb.org)
