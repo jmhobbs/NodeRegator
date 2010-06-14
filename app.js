@@ -4,8 +4,8 @@ require('express/plugins')
 
 /* http://howtonode.org/express-mongodb */
 
-var EventProvider= require('./eventprovider').EventProvider;
-var UserProvider= require('./userprovider').UserProvider;
+// var EventProvider = require('./eventprovider').EventProvider;
+// var UserProvider = require('./userprovider').UserProvider;
 
 configure(
 	function () {
@@ -19,6 +19,10 @@ configure(
 		set( 'root', __dirname )
 	}
 )
+
+var MongoDB = require('./mongo').MongoDB;
+
+var DB = new MongoDB( 'localhost', 27017 );
 
 get(
 	'/*.css',
@@ -82,20 +86,39 @@ get(
 	}
 )
 
-
 post(
 	'/login',
 	function () {
 		if( this.session.logged_in == true ) { this.redirect( '/' ); }
-		if( this.param( 'username' ) == 'jmhobbs' && this.param( 'password' ) == 'password' ) {
-			this.session.logged_in = true;
-			this.flash( 'info', 'Logged You In' );
-			this.redirect( '/' );
-		}
-		else {
-			this.flash( 'info', 'Invalid Credentials' );
-			this.redirect( '/login' );
-		}
+
+		var request = this;
+
+		DB.getCollection(
+			'users',
+			function ( error, collection ) {
+				if( error ) { request.flash( 'info', 'Database Error, Sorry!' ); request.redirect( '/login' ); }
+				else {
+					collection.findOne(
+						{ username: request.param( 'username' ) },
+						function( error, result ) {
+							if( error ) { request.flash( 'info', 'Database Error, Sorry!' ); request.redirect( '/login' ); }
+							else {
+								require('sys').puts( JSON.encode( result ) );
+								if( "undefined" != typeof( result ) && request.param( 'password' ) == result.password ) {
+									request.session.logged_in = true;
+									request.flash( 'info', 'Logged You In' );
+									request.redirect( '/' );
+								}
+								else {
+									request.flash( 'info', 'Invalid Credentials' );
+									request.redirect( '/login' );
+								}
+							}
+						}
+					);
+				}
+			}
+		);
 	}
 )
 
