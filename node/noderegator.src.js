@@ -1,10 +1,10 @@
-var NodeRegate = {
+var NodeRegator = {
 
-	domain: 'localhost:3000',
+	domain: 'ping.noderegator.com',
 	path: '/track',
 
 	track: function ( code ) {
-		url = 'http://' + NodeRegate.domain + NodeRegate.path;
+		url = 'http://' + NodeRegator.domain + NodeRegator.path;
 		url += '?code=';
 		url += escape( code );
 		url += '&protocol=';
@@ -13,7 +13,7 @@ var NodeRegate = {
 		url += escape( window.location.host );
 		url += '&path=';
 		url += escape( window.location.pathname );
-		NodeRegate.xhr( url );
+		NodeRegator.xhr( url );
 	},
 
 	// Adapted from http://articles.sitepoint.com/article/take-command-ajax

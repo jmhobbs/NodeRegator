@@ -1,0 +1,14 @@
+var Config = {
+	Mongo: {
+		Host: "localhost",
+		Port: 27017,
+		Database: "node-aggregated-analytics"
+	},
+	
+	Node: {
+		Port: 8124,
+		Address: "127.0.0.1"
+	}
+}
+
+exports.Config = Config;
