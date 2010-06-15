@@ -12,9 +12,27 @@ MongoDB = function ( host, port ) {
 MongoDB.prototype.getCollection = function( model, callback ) {
 	this.db.collection(
 		model,
-		function( error, user_collection ) {
+		function( error, collection ) {
 			if( error ) callback( error );
-			else callback( null, user_collection );
+			else callback( null, collection );
+		}
+	);
+};
+
+MongoDB.prototype.save = function( model, object, callback ) {
+	this.getCollection(
+		model,
+		function ( error, collection ) {
+			if( error ) callback( error );
+			else {
+				collection.save(
+					object,
+					function ( error, result ) {
+						if( error ) callback( error );
+						else callback( null, result );
+					}
+				);
+			}
 		}
 	);
 };
