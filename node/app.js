@@ -9,9 +9,10 @@ var DB = new MongoDB( Config.Mongo.Host, Config.Mongo.Port, Config.Mongo.Databas
 http.createServer(
 	function( req, res ) {
 		parsed_url = url.parse( req.url, true );
-		if( '/track' == parsed_url.pathname ) {
+		if( '/track.js' == parsed_url.pathname ) {
 			// Check that eveything is in place
 			if(
+				"undefined" == typeof( parsed_url.query ) ||
 				"undefined" == typeof( parsed_url.query.code ) ||
 				"undefined" == typeof( parsed_url.query.protocol ) ||
 				"undefined" == typeof( parsed_url.query.host ) ||

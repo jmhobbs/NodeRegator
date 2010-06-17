@@ -2,7 +2,7 @@ var Config = {
 	Mongo: {
 		Host: "localhost",
 		Port: 27017,
-		Database: "node-aggregated-analytics"
+		Database: "noderegator"
 	},
 	
 	Node: {

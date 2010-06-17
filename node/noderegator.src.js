@@ -1,7 +1,7 @@
 var NodeRegator = {
 
 	domain: 'ping.noderegator.com',
-	path: '/track',
+	path: '/track.js',
 
 	track: function ( code ) {
 		url = 'http://' + NodeRegator.domain + NodeRegator.path;
