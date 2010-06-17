@@ -24,6 +24,24 @@ http.createServer(
 				return;
 			}
 
+			// mod_proxy will sometimes get in the way, this is a work around
+			var ip_address = null;
+			try {
+				ip_address = req.headers['x-forwarded-for'];
+			}
+			catch ( error ) {
+				ip_address = req.connection.remoteAddress;
+			}
+
+			var user_agent = '';
+			try { user_agent = req.headers['user-agent']; } catch ( error ) {}
+			
+			var referer = '';
+			try { referer = req.headers['referer']; } catch ( error ) {}
+
+			var language = '';
+			try { language = req.headers['accept-language']; } catch ( error ) {}
+
 			DB.save(
 				'hits',
 				{
@@ -32,7 +50,10 @@ http.createServer(
 					protocol: parsed_url.query.protocol,
 					host: parsed_url.query.host,
 					path: parsed_url.query.path,
-					ip: req.connection.remoteAddress
+					ip: ip_address,
+					user_agent: user_agent,
+					referer: referer,
+					language: language
 				},
 				function ( error, result ) {
 					// TODO: Log errors?
