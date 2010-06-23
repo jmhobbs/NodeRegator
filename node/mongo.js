@@ -52,7 +52,7 @@ MongoDB.prototype.findOneById = function ( model, id, callback ) {
 								function ( error, item ) {
 									if( error ) callback( error );
 									else if ( null == item ) callback( error );
-									else if ( "undefined" != item["$err"] ) callback( item["$err"] );
+									else if ( "undefined" != typeof( item["$err"] ) ) callback( item["$err"] );
 									else callback( null, item );
 								}
 							);
