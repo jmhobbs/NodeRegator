@@ -24,40 +24,56 @@ http.createServer(
 				return;
 			}
 
-			// mod_proxy will sometimes get in the way, this is a work around
-			var ip_address = null;
-			try {
-				ip_address = req.headers['x-forwarded-for'];
-			}
-			catch ( error ) {
-				ip_address = req.connection.remoteAddress;
-			}
+			DB.findOneById(
+				'users',
+				parsed_url.query.code,
+				function ( error, user ) {
+					if( error || "undefined" == typeof( user ) ) {
+						// TODO: Log errors?
+						res.writeHead( 200, { 'Content-Type': 'application/json' } );
+						res.end( '{ "error": true, "message": "Bad ID" }' );
+					}
+					else {
 
-			var user_agent = '';
-			try { user_agent = req.headers['user-agent']; } catch ( error ) {}
+						// mod_proxy will sometimes get in the way, this is a work around
+						var ip_address = null;
+						try {
+							ip_address = req.headers['x-forwarded-for'];
+						}
+						catch ( error ) {
+							ip_address = req.connection.remoteAddress;
+						}
 
-			var language = '';
-			try { language = req.headers['accept-language']; } catch ( error ) {}
+						var user_agent = '';
+						try { user_agent = req.headers['user-agent']; } catch ( error ) {}
 
-			DB.save(
-				'hits',
-				{
-					time: Math.floor( new Date().getTime() / 1000 ),
-					code: parsed_url.query.code,
-					protocol: parsed_url.query.protocol,
-					host: parsed_url.query.host,
-					path: parsed_url.query.path,
-					ip: ip_address,
-					user_agent: user_agent,
-					language: language
-				},
-				function ( error, result ) {
-					// TODO: Log errors?
-					res.writeHead( 200, { 'Content-Type': 'application/json' } );
-					res.end( '{ "error": false }' );
+						var language = '';
+						try { language = req.headers['accept-language']; } catch ( error ) {}
+
+						DB.save(
+							'hits',
+							{
+								time: Math.floor( new Date().getTime() / 1000 ),
+								user: user._id,
+								protocol: parsed_url.query.protocol,
+								host: parsed_url.query.host,
+								path: parsed_url.query.path,
+								ip: ip_address,
+								user_agent: user_agent,
+								language: language
+							},
+							function ( error, result ) {
+								// TODO: Log errors?
+								res.writeHead( 200, { 'Content-Type': 'application/json' } );
+								if( error )
+									res.end( '{ "error": true, "message": "Failed Save" }' );
+								else
+									res.end( '{ "error": false }' );
+							}
+						);
+					}
 				}
 			);
-
 		}
 		else {
 			res.writeHead( 404, { 'Content-Type': 'text/plain' } );
