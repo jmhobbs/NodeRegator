@@ -8,7 +8,7 @@
 	 * @subpackage Core
 	 */
 	class Request_Core {
-		
+
 		/** The currently executing context. */
 		public static $context = '';
 		/** The currently executing controller. */
@@ -17,7 +17,7 @@
 		public static $method = '';
 		/** Any arguments provided in the request. */
 		public static $arguments = array();
-		
+
 		/**
 		 * Parse a URI and load it as the current request.
 		 *
@@ -30,7 +30,7 @@
 			self::$method = $route['method'];
 			self::$arguments = $route['arguments'];
 		} // Request_Core::load
-		
+
 		/**
 		 * Parses a URI string into a usable format.
 		 *
@@ -62,7 +62,7 @@
 			if( 1 <= count( $components ) ) { $route['controller'] = strtolower( $components[0] ); }
 			if( 2 <= count( $components ) ) { $route['method'] = strtolower( $components[1] ); }
 			if( 3 <= count( $components ) ) { $route['arguments'] = array_slice( $components, 2 ); }
-			
+
 			return $route;
 		} // Request_Core::parse
 

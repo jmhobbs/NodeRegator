@@ -1,5 +1,4 @@
 <?php
-	
 	/**
 	 * Set these as needed. Usually only if you have moved them outside of the web root.
 	 */
@@ -10,15 +9,15 @@
 		This autoloader drives the proper inclusion of all classes.
 	*/
 	function __autoload ( $name ) {
-		
+
 		$force_core = false;
 		$is_library_check = false;
-		
+
 		if( "_Core" == substr( $name, -5 ) ) {
 			$name = substr( $name, 0, -5 );
 			$force_core = true;
 		}
-		
+
 		if( "_Controller" == substr( $name, -11 ) )
 			$file = '/controller/' . strtolower( substr( $name, 0, -11 ) ) . '.php';
 		else if ( '_Context' == substr( $name, -8 ) )
@@ -49,8 +48,11 @@
 		else {
 			throw new Exception( "Class Not Found: $name" );
 		}
-		
+
 	} // __autoload()
+
+	// Tricky bugger. If we have documents stored in session, and this is pre-autoloader we can't find any classes.
+	session_start();
 
 	if( false === strpos( $_SERVER['REQUEST_URI'], Config::get( 'xoket.location' ) ) )
 		die( 'Configuration Error - xoket.location is invalid.' );

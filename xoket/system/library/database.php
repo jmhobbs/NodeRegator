@@ -8,7 +8,7 @@
 	 * @subpackage Core
 	 */
 	class Database_Core {
-	
+
 		protected static $instances = array();
 
 		/**
@@ -19,9 +19,9 @@
 		public static function instance ( $name = 'default' ) {
 
 			//! \todo Skip this junk and use persistent connections?
-			if( is_null( self::$instances[$name] ) ) {
+			if( ! isset( self::$instances[$name] ) or is_null( self::$instances[$name] ) ) {
 				$config = Config::get( 'database.' . $name );
-				
+
 				if( is_null( $config ) )
 					throw new Exception( 'Bad Database Configuration' );
 
