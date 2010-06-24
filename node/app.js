@@ -25,7 +25,7 @@ http.createServer(
 			}
 
 			DB.findOneById(
-				'users',
+				'user',
 				parsed_url.query.code,
 				function ( error, user ) {
 					if( error || "undefined" == typeof( user ) ) {
@@ -51,7 +51,7 @@ http.createServer(
 						try { language = req.headers['accept-language']; } catch ( error ) {}
 
 						DB.save(
-							'hits',
+							'hit',
 							{
 								time: Math.floor( new Date().getTime() / 1000 ),
 								user: user._id,
