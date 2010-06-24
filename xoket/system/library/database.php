@@ -45,8 +45,14 @@
 			$this->database = $this->connection->$name;
 		}
 
+		// Proxy member calls through to the database object (for getting collections)
 		public function __get ( $name ) {
 			return $this->database->$name;
+		}
+
+		// Proxy method calls through to the database object
+		public function __call ( $name, $args ) {
+			return call_user_func_array( array( $this->database, $name ), $args );
 		}
 
 	}

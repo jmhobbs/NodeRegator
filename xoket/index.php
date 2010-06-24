@@ -62,4 +62,6 @@
 	Request::load( $uri );
 
 	$context = Context::instance();
-	$context->execute();
+	$context->headers();
+	echo $context->execute();
+	Flash::update();

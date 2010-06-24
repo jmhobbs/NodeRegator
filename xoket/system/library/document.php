@@ -110,4 +110,9 @@
 			$document = $this->_database->{$this->_name}->findOne( $query );
 			return ( $document ) ? Document::wrap( $document, $this->_name ) : null;
 		}
+		public function distinct ( $key, $query=array() ) {
+			$result = $this->_database->command( array( "distinct" => $this->_name, "key" => $key, "query" => $query ) );
+			if( 1 != $result['ok'] ) return false;
+			return $result['values'];
+		}
 	}
