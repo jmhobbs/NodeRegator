@@ -5,7 +5,9 @@
 		public $context_availability = array( 'xhtml' );
 
 		public function index () {
-			$this->document->title = "Welcome!";
+			$this->document->title = "Dashboard";
+			$this->document->user = Auth::get_user();
+			$this->document->domains = Document::instance( 'hit' )->distinct( 'host', array( 'user' => Auth::get_user()->_id ) );
 		}
 
 		public function login () {
@@ -14,15 +16,25 @@
 			if( Auth::capable() ) { $this->redirect( URI::get( 'user' ) ); }
 
 			if( $_POST ) {
-				if( Auth::login( $_POST['username'], $_POST['password'] ) )
+				if( ! Form::check_request_token() ) {
+					Flash::set( 'Error processing your request!' );
+					$this->redirect( 'user/login' );
+				}
+
+				if( Auth::login( $_POST['username'], $_POST['password'] ) ) {
+					Flash::set( 'Logged you in.' );
 					$this->redirect( URI::get( 'user' ) );
-				else
+				}
+				else {
+					Flash::set( 'Bad e-mail or password.' );
 					$this->redirect( URI::get( 'user/login' ) );
+				}
 			}
 		}
 
 		public function logout () {
 			Auth::logout();
+			Flash::set( 'Logged you out.' );
 			$this->redirect( URI::get( 'user/login' ) );
 		}
 

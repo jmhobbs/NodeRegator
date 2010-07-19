@@ -2,11 +2,13 @@
 
 <?php
 	echo Form::open();
-	echo Form::label( 'username', 'User Name' );
-	echo Form::input( 'username' );
-	echo '<br/>';
-	echo Form::label( 'password', 'Password' );
+	echo '<div class="form-input">';
+	echo Form::label( 'email', 'E-Mail:' );
+	echo Form::input( 'email' );
+	echo '</div>';
+	echo '<div class="form-input">';
+	echo Form::label( 'password', 'Password:' );
 	echo Form::password( 'password' );
-	echo '<br/>';
+	echo '</div>';
 	echo Form::submit( 'Log In' );
 	echo Form::close();

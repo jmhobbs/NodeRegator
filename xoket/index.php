@@ -26,7 +26,6 @@
 		$is_library_check = false;
 
 		// Trim it up and learn about it from it's name.
-
 		if( "_Core" == substr( $name, -5 ) ) {
 			$name = substr( $name, 0, -5 );
 			$force_core = true;

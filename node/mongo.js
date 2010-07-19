@@ -37,4 +37,31 @@ MongoDB.prototype.save = function( model, object, callback ) {
 	);
 };
 
+MongoDB.prototype.findOneById = function ( model, id, callback ) {
+	this.getCollection(
+		model,
+		function ( error, collection ) {
+			if( error ) callback( error );
+			else {
+				collection.find(
+					{ '_id': new ObjectID( id ) },
+					function ( error, cursor ) {
+						if( error ) callback( error );
+						else {
+							cursor.nextObject(
+								function ( error, item ) {
+									if( error ) callback( error );
+									else if ( null == item ) callback( error );
+									else if ( "undefined" != typeof( item["$err"] ) ) callback( item["$err"] );
+									else callback( null, item );
+								}
+							);
+						}
+					}
+				);
+			}
+		}
+	);
+}
+
 exports.MongoDB = MongoDB;
