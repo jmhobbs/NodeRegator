@@ -24,7 +24,15 @@
 			if( is_null( $context ) ) { $context = Request::$context; }
 			if( is_null( $controller ) ) { $controller = Request::$controller; }
 			if( is_null( $method ) ) { $method = Request::$method; }
-			return new View( APP_ROOT . '/view/' . $context . '/' . $controller . '/' . $method . '.php' );
+			
+			$path = '/view/' . $context . '/' . $controller . '/' . $method;
+			
+			if( file_exists( APP_ROOT . $path . '.php' ) )
+				return new View( APP_ROOT . $path . '.php' );
+			else if( file_exists( SYSTEM_ROOT . $path . '.php' ) )
+				return new View( SYSTEM_ROOT . $path . '.php' );
+			else
+				throw new Exception ( 'Missing View: ' . $path );
 		}
 		
 		/**
@@ -35,7 +43,12 @@
 		 * @returns A View object.
 		 */
 		public static function layout ( $context ) {
-			return new View( APP_ROOT . '/view/' . $context . '/layout.php' );
+			if( file_exists( APP_ROOT . '/view/' . $context . '/layout.php' ) )
+				return new View( APP_ROOT . '/view/' . $context . '/layout.php' );
+			else if( file_exists( SYSTEM_ROOT . '/view/' . $context . '/layout.php' ) )
+				return new View( SYSTEM_ROOT . '/view/' . $context . '/layout.php' );
+			else
+				throw new Exception ( 'Missing Layout!' );
 		}
 	
 		/**

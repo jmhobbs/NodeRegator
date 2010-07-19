@@ -8,13 +8,13 @@
 	 * @subpackage Core
 	 */
 	class Document_Core implements ArrayAccess {
-		
+
 		protected $_schema = null;
 		protected $_name = null;
 		protected $_modified = false;
 		protected $_data = null;
 		protected $_database = null;
-		
+
 		/**
 		 * Get an instance of a document by name, if possible.
 		 *
@@ -48,21 +48,21 @@
 			if( is_null( $this->_name ) ) { $this->_name = strtolower( substr( get_called_class(), 0, -9 ) ); }
 			$this->_database = Database::instance( $database_name );
 		}
-		
+
 		/**
 		 * Verify that the data in the document is valid.
 		 *
 		 * @returns True if the document is valid.
 		 **/
 		public function verify () { return true; }
-		
+
 		/**
 		 * Save the document to the database.
 		 */
 		public function save () {
 			$this->_database->{$this->_name}->save( $this->_data );
 		}
-		
+
 		/**
 		 * Load an object into this object.
 		 *
@@ -71,10 +71,10 @@
 		public function load ( $object ) {
 			$this->_data = $object;
 		}
-		
+
 		public function __get ( $key ) { return $this[$key]; }
 		public function __set ( $key, $value ) { return $this[$key] = $value; }
-		
+
 		// ArrayAccess
 		public function offsetSet ( $offset, $value ) {
 			if( is_array( $this->_data ) )
@@ -101,12 +101,18 @@
 			else
 				unset( $this->_data->$offset );
 		}
-		
+
 		// Fake some Mongo stuff
 		public function find ( $query = array(), $fields = array() ) {
 			return $this->_database->{$this->_name}->find( $query, $fields );
 		}
 		public function findOne ( $query = array() ) {
-			return Document::wrap( $this->_database->{$this->_name}->findOne( $query ), $this->_name );
+			$document = $this->_database->{$this->_name}->findOne( $query );
+			return ( $document ) ? Document::wrap( $document, $this->_name ) : null;
+		}
+		public function distinct ( $key, $query=array() ) {
+			$result = $this->_database->command( array( "distinct" => $this->_name, "key" => $key, "query" => $query ) );
+			if( 1 != $result['ok'] ) return false;
+			return $result['values'];
 		}
 	}

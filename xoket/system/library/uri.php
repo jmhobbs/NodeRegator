@@ -8,9 +8,9 @@
 	 * @subpackage Core
 	 */
 	class URI_Core {
-	
+
 		protected static $routes = null;
-	
+
 		/**
 		 * Route a URI to the correct resource.
 		 *
@@ -22,16 +22,16 @@
 		 */
 		public static function route ( $uri ) {
 			self::_load_routes();
-			
+
 			foreach( self::$routes as $expression => $route ) {
 				$alt = preg_replace( $expression, $route, $uri );
 				if( $alt != $uri )
 					return $alt;
 			}
-			
+
 			return $uri;
 		}
-		
+
 		/**
 		 * Load routes from the configuration files.
 		 */
@@ -39,5 +39,30 @@
 			if( is_null( self::$routes ) )
 				self::$routes = Config::get( 'routes.routes', array() );
 		}
-	
+
+		/**
+		 * Converts an in-system path to a full URI.
+		 **/
+		public static function get ( $destination ) {
+			if( is_array( $destination ) ) {
+				/**
+				 * @todo This needs work.  It should be
+				 * array(
+				 *   'controller' => 'whatever',
+				 *   'method' => 'whatever',
+				 *   'arguments' => array( 'arg1', 'arg2' )
+				 * );
+				 *
+				 * And this should be nicely routed.
+				 */
+				$destination = implode( '/', $destination );
+			}
+
+			if( '/' != substr( $destination, 0, 1 ) ) {
+				$destination = Config::get( 'xoket.location', '/' ) . $destination;
+			}
+
+			return $destination;
+		}
+
 	}

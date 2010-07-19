@@ -6,12 +6,12 @@
 	 * @subpackage Helper
 	 */
 	class Form_Helper extends Helper {
-	
+
 		public static $token = null;
-	
+
 		/**
-		 * Internal funcion. Every form based request/response should include an 
-		 * authenticity token to prevent CSRF. This function gets the current token 
+		 * Internal funcion. Every form based request/response should include an
+		 * authenticity token to prevent CSRF. This function gets the current token
 		 * for the current response.
 		 *
 		 * @returns A string representing the authenticty token for this response.
@@ -23,7 +23,7 @@
 			}
 			return self::$token;
 		}
-		
+
 		/**
 		 * Compares the request token against it's expected value.
 		 *
@@ -32,7 +32,7 @@
 		public static function check_request_token () {
 			return ( $_REQUEST['authenticity_token'] == $_SESSION['_xoket_authenticity_token'] );
 		}
-	
+
 		/**
 		 * Open a new form. Automatically includes the request token.
 		 *
@@ -52,7 +52,7 @@
 			$form .= '<input type="hidden" name="authenticity_token" value="' . self::get_request_token() . '" />';
 			return $form;
 		}
-	
+
 		/**
 		 * Closes a form.
 		 *
@@ -66,17 +66,21 @@
 		public static function close () {
 			return  '</form>';
 		}
-		
+
 		public static function input ( $name, $value="" ) {
 			return '<input type="text" name="' . $name . '" id="' . $name . '" value="' . $value . '" />';
 		}
-		
+
+		public static function password ( $name, $value="" ) {
+			return '<input type="password" name="' . $name . '" id="' . $name . '" value="' . $value . '" />';
+		}
+
 		public static function label ( $name, $text ) {
 			return '<label for="' . $name . '">' . $text . '</label>';
 		}
-		
+
 		public static function submit ( $value="Submit" ) {
 			return '<input type="submit" value="' . $value . '" />';
 		}
-		
+
 	}

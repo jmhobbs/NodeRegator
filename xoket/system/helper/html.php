@@ -8,27 +8,9 @@
 	class HTML_Helper extends Helper {
 	
 		public static function link ( $destination, $text ) {
-			if( is_array( $destination ) ) {
-				/**
-				 * @todo This needs work.  It should be
-				 * array(
-				 *   'controller' => 'whatever',
-				 *   'method' => 'whatever',
-				 *   'arguments' => array( 'arg1', 'arg2' )
-				 * );
-				 *
-				 * And this should be nicely routed.
-				 */
-				$destination = implode( '/', $destination );
-			}
-			
-			if( '/' != substr( $destination, 0, 1 ) ) {
-				$destination = Config::get( 'xoket.location', '/' ) . $destination;
-			}
-			
-			return '<a href="' . HTML::escape( $destination ) . '">' . HTML::escape( $text ) . '</a>';
+			return '<a href="' . HTML::escape( URI::get( $destination ) ) . '">' . HTML::escape( $text ) . '</a>';
 		}
-		
+
 		/**
 		 * Safely escape HTML characters to avoid XSS.
 		 *
@@ -38,5 +20,5 @@
 		public static function escape ( $string ) {
 			return htmlspecialchars( $string );
 		}
-	
+
 	}
