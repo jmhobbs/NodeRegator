@@ -3,8 +3,8 @@
 <?php
 	echo Form::open();
 	echo '<div class="form-input">';
-	echo Form::label( 'email', 'E-Mail:' );
-	echo Form::input( 'email' );
+	echo Form::label( 'username', 'E-Mail:' );
+	echo Form::input( 'username' );
 	echo '</div>';
 	echo '<div class="form-input">';
 	echo Form::label( 'password', 'Password:' );
